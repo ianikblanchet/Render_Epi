@@ -14,7 +14,6 @@ class EpiType(Base):
     id = Column(Integer, primary_key = True)
     description = Column(String(100), index = True)
     store_num = Column(String(10), index = True)    
-    url_fabricant =  Column(String(100), index = True)
     is_year_inpection = Column(Boolean, default=False)
     epi = relationship('Epi', backref = 'epitype', lazy = 'joined')
 
@@ -33,6 +32,7 @@ class Epi(Base):
     id = Column(Integer, primary_key = True)    
     user_id = Column(Integer, ForeignKey('user.id'))
     epitype_id = Column(Integer, ForeignKey('epitype.id'))
+    fabricant_id = Column(Integer, ForeignKey('fabricant.id'))
     serial = Column(String(50), index = True)
     date_insp = Column(Date, index = True)
     date_year_insp = Column(Date, index = True)
@@ -88,7 +88,15 @@ class Compagnie(Base):
     adresse = Column(String(200))
     url = Column(String(100))
     subscription_type = Column(String(25))
-    user = relationship('User', backref = 'compganie', lazy='joined')    
+    user = relationship('User', backref = 'compganie', lazy='joined')
+
+class Fabricant(Base):
+    __tablename__ = "fabricant"
+    id = Column(Integer, primary_key=True)
+    name = Column(String(50), index=True, unique=True)
+    adresse = Column(String(200))
+    url = Column(String(100))    
+    epi = relationship('Epi', backref = 'fabricant', lazy='joined')
 
 
 #Base.metadata.create_all(engine)
