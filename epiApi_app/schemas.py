@@ -33,7 +33,7 @@ class EpiType(BaseModel):
         orm_mode = True
     
 class BaseUser(BaseModel):
-    username : str
+    
     email : str
     name : str
     firstname : str
