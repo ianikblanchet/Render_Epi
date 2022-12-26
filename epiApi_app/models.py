@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, Float, Date, ForeignKey
+from sqlalchemy import Column, Integer, String , Boolean, Float, Date, ForeignKey
 from sqlalchemy.orm import relationship
 from database import Base, engine
 from datetime import date
@@ -52,6 +52,7 @@ class User(Base):
     epi = relationship('Epi', backref = 'user', lazy='joined')    
     group_manager = relationship('Group', backref = 'Superviseur', lazy ='joined', foreign_keys = 'Group.uid_manager')
     group_employe = relationship('Group', backref = 'Employe', lazy ='joined', foreign_keys = 'Group.uid_employe')
+    compagnie_id = Column(Integer, ForeignKey('compagnie.id'))
 
     password_hash = Column(String(128))
     
@@ -79,5 +80,15 @@ class User(Base):
         except:
             return
         return User.query.get(id)
+
+class Compagnie(Base):
+    __tablename__ = "compagnie"
+    id = Column(Integer, primary_key=True)
+    name = Column(String(50), index=True, unique=True)
+    adresse = Column(String(200))
+    url = Column(String(100))
+    subscription_type = Column(String(25))
+    user = relationship('User', backref = 'compganie', lazy='joined')    
+
 
 #Base.metadata.create_all(engine)
