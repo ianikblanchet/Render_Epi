@@ -58,7 +58,7 @@ class User(Base):
     
 
     def __repr__(self):
-        return 'username={} {} {}'.format(self.numemploye, self.name, self.surname  )
+        return 'username={} {} {}'.format(self.employe_number, self.name, self.firstname  )
     
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)

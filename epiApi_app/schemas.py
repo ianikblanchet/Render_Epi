@@ -48,7 +48,12 @@ class BaseUser(BaseModel):
 
 
 class User(BaseUser):
-    id : int
+    id : Optional[int]
     
+class LoginItem(BaseModel):
+    email: str
+    password: str
 
-
+class Decode(BaseModel):
+    token: str
+   
