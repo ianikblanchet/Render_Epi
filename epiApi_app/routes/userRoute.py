@@ -57,12 +57,10 @@ def create_user(user: schemas.BaseUser, db: Session = Depends(get_db)):
 @router.post("/login")
 async def user_login(loginitem:schemas.LoginItem, db: Session = Depends(get_db)):
 
-    #data = json.loads(loginitem)
-    print('ok1')
+    
     data = jsonable_encoder(loginitem)
     user = userCrud.get_user(db,1)
-    #user = users.filter(users.email == data['email']).first()
-    print(user.email)
+    
     if data['email']== user.email and user.check_password(data['password']):
         print('ok3')
         encoded_jwt = jwt.encode({'email': data['email'], 'exp': time() + ACCESS_TOKEN_EXPIRES}, Config.SECRET_KEY, algorithm=ALGORITHM)
