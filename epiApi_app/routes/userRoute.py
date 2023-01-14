@@ -55,7 +55,7 @@ def create_user(user: schemas.BaseUser, db: Session = Depends(get_db)):
     return userCrud.create_user(db=db, user=user)
 
 @router.post("/login")
-async def user_login(loginitem:schemas.LoginItem, db: Session = Depends(get_db)):
+def user_login(loginitem:schemas.LoginItem, db: Session = Depends(get_db)):
 
     
     data = jsonable_encoder(loginitem)
