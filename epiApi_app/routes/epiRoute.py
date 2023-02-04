@@ -20,6 +20,7 @@ def get_db():
     finally:
         db.close()
 
+#route to gather all EPI
 @router.get("/epis/", response_model=List[schemas.Epi], tags=["epis"])
 def read_epis(db: Session = Depends(get_db)):
     epis = epiCrud.get_epis(db)

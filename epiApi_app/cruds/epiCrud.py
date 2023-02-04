@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-import models
+import models, schemas
 
 def get_epis(db: Session):
     return db.query(models.Epi).all()

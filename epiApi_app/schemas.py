@@ -37,6 +37,7 @@ class BaseUser(BaseModel):
     email : str
     name : str
     firstname : str
+    password : str
     employe_number : Optional[str]
     level : str
     epi : Optional[List[Epi]] = []

@@ -10,6 +10,7 @@ import json
 
 
 
+
 import cruds.userCrud as userCrud
 
 import schemas
@@ -19,7 +20,7 @@ from database import session
 router = APIRouter()
 
 ALGORITHM ="HS256"
-ACCESS_TOKEN_EXPIRES = 24000
+ACCESS_TOKEN_EXPIRES = 120
 
 
 
@@ -47,30 +48,42 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
     return db_user
 
 
-@router.post("/users/", response_model=schemas.User)
+@router.post("/users/")
 def create_user(user: schemas.BaseUser, db: Session = Depends(get_db)):
+    print(user.name)
+    userCrud.create_user(db=db, user=user)    
     #db_user = crud.get_user_by_email(db, email=user.email)
     #if db_user:
         #raise HTTPException(status_code=400, detail="Email already registered")
-    return userCrud.create_user(db=db, user=user)
+    return {'message':'employe créé'}
 
+
+#Route to login in app
 @router.post("/login")
-def user_login(loginitem:schemas.LoginItem, db: Session = Depends(get_db)):
+async def user_login(loginitem:schemas.LoginItem, db: Session = Depends(get_db)):
 
     
     data = jsonable_encoder(loginitem)
-    user = userCrud.get_user(db,1)
+    print(loginitem.email)
+    print(data['email'])
+    user = userCrud.get_user(db,data['email'])
     
-    if data['email']== user.email and user.check_password(data['password']):
-        print('ok3')
-        encoded_jwt = jwt.encode({'email': data['email'], 'exp': time() + ACCESS_TOKEN_EXPIRES}, Config.SECRET_KEY, algorithm=ALGORITHM)
-        print(encoded_jwt)
-        return {"token": encoded_jwt}
+    print(user)
+    if user:
+    # if data['email'] == user.email and user.check_password(data['password']):
+        if user.check_password(data['password']):
+            print('ok3')
+            encoded_jwt = jwt.encode({'email': data['email'], 'exp': time() + ACCESS_TOKEN_EXPIRES}, Config.SECRET_KEY, algorithm=ALGORITHM)
+            print(encoded_jwt)
+            
+            return {"token": encoded_jwt}
 
+        else:
+            return {"message":"login failed"}
     else:
-        return {"message":"login failed"}
+        print('hello')
 
-
+#Temporary route to fix my password, need to be modify to allow users change there passwords
 @router.get("/pass/{user_id}")
 def pass_user(user_id: int, db: Session = Depends(get_db)):
     print('hello')
@@ -82,19 +95,21 @@ def pass_user(user_id: int, db: Session = Depends(get_db)):
     
     return print('ok')
 
-
+#route to validate if token still valide
 @router.post("/decode")
 def token_decode(token :schemas.Decode, db: Session = Depends(get_db)):
     
-    #data = json.loads(loginitem)
-    print(token)
+    data = jsonable_encoder(token)
+    print(data)
     
     
     
     if jwt.decode(token.token, Config.SECRET_KEY, algorithms=ALGORITHM)['email']:
         print('decode ok')
+        print(jwt.decode(token.token, Config.SECRET_KEY, algorithms=ALGORITHM)['email'])
         
         return {"token": 'decode'}
 
     else:
+        print('fail')
         return {"token":"decode failed"}
