@@ -16,9 +16,11 @@ class EpiType(Base):
     store_num = Column(String(10), index = True)    
     is_year_inpection = Column(Boolean, default=False)
     epi = relationship('Epi', backref = 'epitype', lazy = 'joined')
+    # On doit ajouter une relation avec la compagnie, car le numéro de magasin sera spécifique à la compagnie et chaque compagnie pourra restreintre le nombre d'epi dispo.
+    compagnie_id = Column(Integer, ForeignKey('compagnie.id'))
 
     def __repr__(self):
-        return '{} {}'.format(self.numero_magasin, self.EPI_text)
+        return '{} {}'.format(self.store_num, self.description)
 
 class Group(Base):
     __tablename__ = 'group'
@@ -36,7 +38,7 @@ class Epi(Base):
     serial = Column(String(50), index = True)
     date_insp = Column(Date, index = True)
     date_year_insp = Column(Date, index = True)
-    buy_date = Column(Date, index = True)
+    buy_date = Column(Date, index = True)    
     
 
 
@@ -88,6 +90,7 @@ class Compagnie(Base):
     url = Column(String(100))
     subscription_type = Column(String(25))
     user = relationship('User', backref = 'compganie', lazy='joined')
+    epitype = relationship('EpiType', backref = 'compganie', lazy='joined')
 
 class Fabricant(Base):
     __tablename__ = "fabricant"

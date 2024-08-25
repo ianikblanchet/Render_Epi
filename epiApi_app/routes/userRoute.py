@@ -20,7 +20,7 @@ from database import session
 router = APIRouter()
 
 ALGORITHM ="HS256"
-ACCESS_TOKEN_EXPIRES = 120
+ACCESS_TOKEN_EXPIRES = 600
 
 
 
@@ -76,7 +76,7 @@ async def user_login(loginitem:schemas.LoginItem, db: Session = Depends(get_db))
             encoded_jwt = jwt.encode({'email': data['email'], 'exp': time() + ACCESS_TOKEN_EXPIRES}, Config.SECRET_KEY, algorithm=ALGORITHM)
             print(encoded_jwt)
             
-            return {"token": encoded_jwt}
+            return {"token": encoded_jwt, "user" : user}
 
         else:
             return {"message":"login failed"}
