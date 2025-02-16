@@ -41,7 +41,7 @@ def create_table():
     
 
 
-@router.get("/users/", response_model=List[schemas.User])
+@router.get("/users/")#, response_model=List[schemas.User])
 def read_users(db: Session = Depends(get_db)):
     users = userCrud.get_users(db)
     return users
