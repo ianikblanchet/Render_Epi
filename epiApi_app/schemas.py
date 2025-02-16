@@ -53,6 +53,7 @@ class BaseUser(BaseModel):
 class User(BaseUser):
     id : Optional[int]
     
+    
 class LoginItem(BaseModel):
     email: str
     password: str
