@@ -7,7 +7,7 @@ from config import Config
 from time import time
 import models
 import json
-
+from database import Base, engine
 
 
 
@@ -33,6 +33,12 @@ def get_db():
     finally:
         db.close()
 
+
+@router.get("/createtable/")
+def create_table():
+    Base.metadata.create_all(engine)
+    return {"message":"table created"}
+    
 
 
 @router.get("/users/", response_model=List[schemas.User])
